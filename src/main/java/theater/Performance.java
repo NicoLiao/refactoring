@@ -1,15 +1,23 @@
 package theater;
 
 /**
- * Class representing a performance of a play..
+ * A scheduled performance (of a particular play) with an audience size.
  */
 public class Performance {
 
-    public String playID;
-    public int audience;
+    private final String playID;
+    private final int audience;
 
     public Performance(String playID, int audience) {
         this.playID = playID;
         this.audience = audience;
+    }
+
+    public String getPlayID() {
+        return playID;
+    }
+
+    public int getAudience() {
+        return audience;
     }
 }

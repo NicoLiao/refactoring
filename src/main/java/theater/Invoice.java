@@ -3,7 +3,7 @@ package theater;
 import java.util.List;
 
 /**
- * Class representing an invoice for a customer.
+ * Value object representing an invoice for a customer.
  */
 public class Invoice {
 
@@ -15,11 +15,11 @@ public class Invoice {
         this.performances = performances;
     }
 
-    public final String getCustomer() {
+    public String getCustomer() {
         return customer;
     }
 
-    public final List<Performance> getPerformances() {
+    public List<Performance> getPerformances() {
         return performances;
     }
 }
