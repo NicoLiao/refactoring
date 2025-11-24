@@ -6,6 +6,7 @@ import java.util.Map;
 
 /**
  * Generates a statement for a given invoice of performances.
+ * Task 2 refactor complete: amount/credits/totals/formatting moved to helpers.
  */
 public class StatementPrinter {
 
@@ -24,31 +25,18 @@ public class StatementPrinter {
      * @throws RuntimeException if one of the play types is not known
      */
     public String statement() {
-        int totalAmount = 0;
-        int volumeCredits = 0;
-
         final StringBuilder result =
                 new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
 
-        final NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.US);
-
         for (Performance p : invoice.getPerformances()) {
-            final int thisAmount = getAmount(p);
-
-            // add volume credits via helper
-            volumeCredits += getVolumeCredits(p);
-
             result.append(String.format("  %s: %s (%s seats)%n",
                     getPlay(p).getName(),
-                    currency.format(thisAmount / (double) Constants.PERCENT_FACTOR),
+                    usd(getAmount(p)),
                     p.getAudience()));
-
-            totalAmount += thisAmount;
         }
 
-        result.append(String.format("Amount owed is %s%n",
-                currency.format(totalAmount / (double) Constants.PERCENT_FACTOR)));
-        result.append(String.format("You earned %s credits%n", volumeCredits));
+        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount())));
+        result.append(String.format("You earned %s credits%n", getTotalVolumeCredits()));
         return result.toString();
     }
 
@@ -87,6 +75,22 @@ public class StatementPrinter {
         result += Math.max(performance.getAudience() - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
         if ("comedy".equals(getPlay(performance).getType())) {
             result += performance.getAudience() / Constants.COMEDY_EXTRA_VOLUME_FACTOR;
+        }
+        return result;
+    }
+
+    private int getTotalAmount() {
+        int result = 0;
+        for (Performance p : invoice.getPerformances()) {
+            result += getAmount(p);
+        }
+        return result;
+    }
+
+    private int getTotalVolumeCredits() {
+        int result = 0;
+        for (Performance p : invoice.getPerformances()) {
+            result += getVolumeCredits(p);
         }
         return result;
     }
