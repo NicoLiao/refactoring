@@ -90,4 +90,9 @@ public class StatementPrinter {
         }
         return result;
     }
+
+    private String usd(int amountInCents) {
+        return NumberFormat.getCurrencyInstance(Locale.US)
+                .format(amountInCents / (double) Constants.PERCENT_FACTOR);
+    }
 }
